@@ -56,13 +56,14 @@ case "$1" in
 		        cat <<-EOSQL > create_user.sql
 				DECLARE
 				  user_exists INTEGER := 0;
-				BEGIN
+				BEGIN				  
 				  SELECT COUNT(1) INTO user_exists FROM dba_users WHERE username = UPPER('$ORACLE_USER');
 				  IF user_exists = 0
 				  THEN
 				    EXECUTE IMMEDIATE ('CREATE USER $ORACLE_USER IDENTIFIED BY $ORACLE_PASSWORD');
 				    EXECUTE IMMEDIATE ('GRANT ALL PRIVILEGES TO $ORACLE_USER');
 				    EXECUTE IMMEDIATE ('GRANT SELECT ANY DICTIONARY TO $ORACLE_USER');
+				    EXECUTE IMMEDIATE ('ALTER SYSTEM FLUSH SHARED_POOL');
 				  END IF;
 				END;
 				/
