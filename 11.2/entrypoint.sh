@@ -50,6 +50,76 @@ case "$1" in
 
 		/etc/init.d/oracle-xe start
 
+		cat <<-EOSQL > sys_init.sql
+		---- DEVELOPMENT ROLE ----
+		create role Development
+		/
+
+		grant create cluster,
+			create sequence,
+			create type,
+			create table,
+			create view,
+			create materialized view,
+			create trigger,
+			create procedure,
+			create operator,
+			create indextype,
+			create dimension,
+			create library,
+			create synonym
+		to Development
+		/
+
+		---- REMOVE STUPID "SECURITY" ----
+		alter profile default limit password_life_time unlimited
+		/
+
+		alter profile default
+			limit failed_login_attempts unlimited
+			password_life_time unlimited
+		/
+
+		alter system set sec_case_sensitive_logon = false  -- starts from Oracle 10
+		/
+		EOSQL
+
+		sqlplus system/oracle@localhost @./sys_init.sql
+		rm ./sys_init.sql
+
+		cat <<-EOSQL > default_users.sql
+		create user Test_User identified by test
+							default tablespace users
+							temporary tablespace temp
+							quota unlimited on users
+		/
+
+		grant connect, development
+			to Test_User with admin option
+		/
+
+		create user Test_Admin identified by test
+							default tablespace users
+							temporary tablespace temp
+							quota unlimited on users
+		/
+
+		grant connect, development
+			to Test_User with admin option
+		/
+
+		grant connect
+			to Test_Admin
+		/
+		
+		grant select any dictionary
+			to Test_Admin
+		/		
+		EOSQL
+
+		sqlplus system/oracle@localhost @./default_users.sql
+		rm ./default_users.sql
+
 		if [ ! -z $ORACLE_USER ] && [ ! -z $ORACLE_PASSWORD ] ; then
 		        echo "ORACLE_USER: $ORACLE_USER"
 		        echo "ORACLE_PASSWORD: $ORACLE_PASSWORD"
