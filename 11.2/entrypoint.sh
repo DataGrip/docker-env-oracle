@@ -105,7 +105,7 @@ case "$1" in
 		/
 
 		grant connect, development
-			to Test_User with admin option
+			to Test_Admin with admin option
 		/
 
 		grant connect
