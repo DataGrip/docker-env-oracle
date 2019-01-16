@@ -114,7 +114,19 @@ case "$1" in
 		
 		grant select any dictionary
 			to Test_Admin
-		/		
+		/
+
+		grant select_catalog_role
+			to Test_Admin
+		/
+
+		grant select any dictionary
+			to Test_User
+		/
+
+		grant select_catalog_role
+			to Test_User
+		/
 		EOSQL
 
 		sqlplus system/oracle@localhost @./default_users.sql
