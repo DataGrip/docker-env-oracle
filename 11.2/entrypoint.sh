@@ -98,6 +98,10 @@ case "$1" in
 			to Test_User with admin option
 		/
 
+		grant debug connect session
+		    to Test_User
+		/
+
 		create user Test_Admin identified by test
 							default tablespace users
 							temporary tablespace temp
@@ -108,11 +112,7 @@ case "$1" in
 			to Test_Admin with admin option
 		/
 
-		grant connect
-			to Test_Admin
-		/
-		
-		grant select any dictionary
+		grant select any dictionary, debug connect session, debug any procedure
 			to Test_Admin
 		/
 
@@ -120,13 +120,6 @@ case "$1" in
 			to Test_Admin
 		/
 
-		grant select any dictionary
-			to Test_User
-		/
-
-		grant select_catalog_role
-			to Test_User
-		/
 		EOSQL
 
 		sqlplus system/oracle@localhost @./default_users.sql
