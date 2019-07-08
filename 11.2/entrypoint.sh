@@ -50,6 +50,18 @@ case "$1" in
 
 		/etc/init.d/oracle-xe start
 
+		cat <<-EOSQL > disable_direct_io.sql
+		ALTER SYSTEM SET FILESYSTEMIO_OPTIONS=DIRECTIO SCOPE=SPFILE
+		/
+		ALTER SYSTEM SET DISK_ASYNCH_IO=FALSE SCOPE=SPFILE
+		/
+		EOSQL
+
+		sqlplus system/oracle@localhost @./disable_direct_io.sql
+		# rm ./disable_direct_io.sql
+
+		/etc/init.d/oracle-xe restart
+
 		cat <<-EOSQL > sys_init.sql
 		---- DEVELOPMENT ROLE ----
 		create role Development
@@ -119,7 +131,6 @@ case "$1" in
 		grant select_catalog_role
 			to Test_Admin
 		/
-
 		EOSQL
 
 		sqlplus system/oracle@localhost @./default_users.sql
