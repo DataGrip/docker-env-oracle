@@ -36,7 +36,7 @@ case "$1" in
 			#Setting up processes, sessions, transactions.
 			sed -i -E "s/processes=[^)]+/processes=$processes/g" /u01/app/oracle/product/11.2.0/xe/config/scripts/init.ora
 			sed -i -E "s/processes=[^)]+/processes=$processes/g" /u01/app/oracle/product/11.2.0/xe/config/scripts/initXETemp.ora
-			
+
 			sed -i -E "s/sessions=[^)]+/sessions=$sessions/g" /u01/app/oracle/product/11.2.0/xe/config/scripts/init.ora
 			sed -i -E "s/sessions=[^)]+/sessions=$sessions/g" /u01/app/oracle/product/11.2.0/xe/config/scripts/initXETemp.ora
 
@@ -142,7 +142,7 @@ case "$1" in
 		        cat <<-EOSQL > create_user.sql
 				DECLARE
 				  user_exists INTEGER := 0;
-				BEGIN				  
+				BEGIN
 				  SELECT COUNT(1) INTO user_exists FROM dba_users WHERE username = UPPER('$ORACLE_USER');
 				  IF user_exists = 0
 				  THEN
@@ -158,7 +158,18 @@ case "$1" in
 		        rm ./create_user.sql
 		fi
 
-		echo "Database ready to use. Enjoy! ;)"
+		echo "(*) Installing utPLSQL"
+
+		UTPLSQL_DOWNLOAD_URL=$(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL/releases/latest | awk '/browser_download_url/ { print $2 }' | grep ".zip\"" | sed 's/"//g')
+		curl -Lk "${UTPLSQL_DOWNLOAD_URL}" -o utPLSQL.zip
+		unzip -q utPLSQL.zip
+		# sqlplus system/oracle@localhost @/utPLSQL/source/install_headless.sql
+		# sqlplus sys/oracle@127.0.0.1:1521/xe as sysdba @/utPLSQL/source/install_headless.sql
+		cd /utPLSQL/source
+		sqlplus sys/oracle@localhost as sysdba @./install_headless.sql
+
+		echo "(*) Database ready to use"
+		echo "(*) Database ready to use" >> /home/finished.log
 
 		##
 		## Workaround for graceful shutdown. ....ing oracle... ‿( ́ ̵ _-`)‿
