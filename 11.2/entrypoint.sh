@@ -128,6 +128,10 @@ case "$1" in
 			to Test_Admin
 		/
 
+		grant create user, create profile, create tablespace, alter tablespace, drop user, drop profile, drop tablespace
+    		to Test_Admin
+		/
+
 		grant select_catalog_role
 			to Test_Admin
 		/
