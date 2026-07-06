@@ -11,7 +11,7 @@ FROM oraclelinux:7-slim
 # ----------------------------------
 # (1) linuxamd64_12102_database_se2_1of2.zip
 #     linuxamd64_12102_database_se2_2of2.zip
-#     Download *.zip files here https://drive.google.com/drive/folders/1kompILjA96OzDnw5ooOekYn0olQ4mkfQ?usp=drive_link
+#     Download *.zip files here https://drive.google.com/drive/folders/1b_4y0zT8zl4zYkNWkyDict1LH5m-g995?usp=sharing
 #
 #     (obsolete)
 #     Download Oracle Database 12c Release 1 Standard Edition 2 for Linux x64
