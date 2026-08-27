@@ -44,7 +44,7 @@ ENV ORACLE_BASE=/opt/oracle \
     CHECK_SPACE_FILE="checkSpace.sh" \
     CHECK_DB_FILE="checkDBStatus.sh" \    
     INSTALL_DB_BINARIES_FILE="installDBBinaries.sh" \
-    SYS_INIT_FILE="sys-init.sql" \
+    SYS_INIT_FILE="create-role.sql" \
     USER_INIT_FILE="create-test-users.sql"
 
 # Use second ENV so that variable get substituted
